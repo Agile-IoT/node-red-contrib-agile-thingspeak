@@ -231,6 +231,12 @@
     <p>Configuration:</p>
 
     <ul>
+    <li><code>Channel</code> - Choose <code>existing<code> in case you want to post to an
+    existing Thingspeak channel. Choose <code>new</code> to create a new Thingspeak channel
+    with the specified proprieties. The API key for the new channel will be automatically
+    retrieved and used to immediately start posting further data to the channel.
+    The only mandatory field when creating a new channel is your Thingspeak account API key.
+
     <li><code>Label</code> - The label to display for this node.  Leave blank to use the default.</li>
 
     <li><code>Delay</code> - The delay before posting data, in seconds.  When the first matching
