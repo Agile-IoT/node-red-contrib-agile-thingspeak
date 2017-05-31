@@ -73,3 +73,8 @@ posting it to ThingSpeak.
 - `uploading data...` - The data is currently being uploaded to ThingSpeak.
 If everything is working, this message is displayed only briefly and
 may not be visible.
+- `creating channel` - The new thingspeak channel is being created.
+- `channel created` - The new thingspeak channel was created.
+
+If the status has a red indicator, an error has occured. The Node-Red logs
+can be checked for more information in that case.
