@@ -3,10 +3,14 @@
         category: 'function',
         color: '#e87d81',
         credentials: {
-            apiKey: {type:"password", required:true}
+            apiKey: {type:"password", required:true},
+            accKey: {type:"password", required:true}
         },
         defaults: {
-            name: {value:""},
+            dropdown: {value: "new"},
+
+            // Appending data to existing channel.
+            label: {value:""},
             delay: {value:"15", validate:RED.validators.number()},
             topic1: {value:""},
             topic2: {value:""},
@@ -16,66 +20,203 @@
             topic6: {value:""},
             topic7: {value:""},
             topic8: {value:""},
-            endpoint: {type:"text", required:true, value:"https://thingspeak.com"},
+            endpoint: {required:true, value:"https://thingspeak.com"},
+
+            // Creating new channel.
+            name: {value: ""},
+            description: {value: ""},
+            field1: {value:""},
+            field2: {value:""},
+            field3: {value:""},
+            field4: {value:""},
+            field5: {value:""},
+            field6: {value:""},
+            field7: {value:""},
+            field8: {value:""},
+            lat: {value:""},
+            long: {value:""},
+            elevation: {value:""},
+            meta: {value: ""},
+            tags: {value: ""},
+            url: {value: ""},
+            public: {value: true}
         },
         inputs:1,
         outputs:0,
         icon: "bridge.png",
         label: function() {
-            return this.name||"thingspeak42";
+            return this.label||"thingspeak42";
+        },
+        oneditprepare: function() {
+          if (this.dropdown === "new")
+            this.dropdown = "existing"
+
+          if (!this.dropdown)
+            this.dropdown = "new"
+
+          if (this.dropdown === "new") {
+            $("#node-input-dropdown").val("new") 
+            $("#reuse").hide()
+            $("#new").show()
+          } else {
+            $("#node-input-dropdown").val("existing") 
+            $("#new").hide()
+            $("#reuse").show()
+          }
         }
     });
 </script>
 
+<script type="text/javascript">
+  function handleChange() {
+    const mode = $("#node-input-dropdown").val()
+    if (mode === "new") {
+      $("#node-input-dropdown").val("new") 
+      $("#reuse").hide()
+      $("#new").show()
+    } else {
+      $("#new").hide()
+      $("#reuse").show()
+    }
+  }
+</script>
+
 <script type="text/x-red" data-template-name="thingspeak42">
-    <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+    <div id="top">
+      <div class="form-row">
+          <label for="node-input-dropdown"><i class="icon-tag"></i>Channel</label>
+          <select type="text" id="node-input-dropdown" onchange="handleChange()">
+            <option value="new">New</option>
+            <option value="existing">Existing</option>
+          </select>
+      </div>
     </div>
-    <div class="form-row">
-        <label for="node-input-delay"><i class="icon-pause"></i>Delay</label>
-        <input type="text" id="node-input-delay" placeholder="Delay while aggregating values (seconds)">
+
+    <div id="new">
+      <div class="form-row">
+          <label for="node-input-name"><i class="icon-tag"></i>Channel Name</label>
+          <input type="text" id="node-input-name" placeholder="Channel Name">
+      </div>
+      <div class="form-row">
+          <label for="node-input-description"><i class="icon-tag"></i>Description</label>
+          <input type="text" id="node-input-description" placeholder="Channel Description">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field1"><i class="icon-tasks"></i>Name of field 1</label>
+          <input type="text" id="node-input-field1" placeholder="Topic for Field 1">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field2"><i class="icon-tasks"></i>Name of field 2</label>
+          <input type="text" id="node-input-field2" placeholder="Topic for Field 2">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field3"><i class="icon-tasks"></i>Name of field 3</label>
+          <input type="text" id="node-input-field3" placeholder="Topic for Field 3">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field4"><i class="icon-tasks"></i>Name of field 4</label>
+          <input type="text" id="node-input-field4" placeholder="Topic for Field 4">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field5"><i class="icon-tasks"></i>Name of field 5</label>
+          <input type="text" id="node-input-field5" placeholder="Topic for Field 5">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field6"><i class="icon-tasks"></i>Name of field 6</label>
+          <input type="text" id="node-input-field6" placeholder="Topic for Field 6">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field7"><i class="icon-tasks"></i>Name of field 7</label>
+          <input type="text" id="node-input-field7" placeholder="Topic for Field 7">
+      </div>
+      <div class="form-row">
+          <label for="node-input-field8"><i class="icon-tasks"></i>Name of field 8</label>
+          <input type="text" id="node-input-field8" placeholder="Topic for Field 8">
+      </div>
+      <div class="form-row">
+          <label for="node-input-lat"><i class="icon-globe"></i>Latitude</label>
+          <input type="text" id="node-input-lat" placeholder="Latitude in Degrees">
+      </div>
+      <div class="form-row">
+          <label for="node-input-long"><i class="icon-globe"></i>Longitude</label>
+          <input type="text" id="node-input-long" placeholder="Longitude in Degrees">
+      </div>
+      <div class="form-row">
+          <label for="node-input-elevation"><i class="icon-globe"></i>Elevation</label>
+          <input type="text" id="node-input-elevation" placeholder="Elevation in meters">
+      </div>
+      <div class="form-row">
+          <label for="node-input-meta"><i class="icon-tasks"></i>Metadata</label>
+          <input type="text" id="node-input-meta" placeholder="Metadata in JSON, XML, or any other format">
+      </div>
+      <div class="form-row">
+          <label for="node-input-tags"><i class="icon-tasks"></i>Tags</label>
+          <input type="text" id="node-input-tags" placeholder="Comma-separated list of tags">
+      </div>
+      <div class="form-row">
+          <label for="node-input-url"><i class="icon-tasks"></i>Url</label>
+          <input type="text" id="node-input-url" placeholder="Webpage URL for the channel">
+      </div>
+      <div class="form-row">
+          <label for="node-input-public"><i class="icon-tag"></i>Make Public</label>
+          <input type="checkbox" id="node-input-public">
+      </div>
+      <div class="form-row">
+          <label for="node-input-accKey"><i class="icon-lock"></i>API Key</label>
+          <input type="password" id="node-input-accKey" placeholder="Account API key">
+      </div>
     </div>
-    <div class="form-row">
-        <label for="node-input-topic1"><i class="icon-tasks"></i>Topic 1</label>
-        <input type="text" id="node-input-topic1" placeholder="Topic for Field 1">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic2"><i class="icon-tasks"></i>Topic 2</label>
-        <input type="text" id="node-input-topic2" placeholder="Topic for Field 2">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic3"><i class="icon-tasks"></i>Topic 3</label>
-        <input type="text" id="node-input-topic3" placeholder="Topic for Field 3">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic4"><i class="icon-tasks"></i>Topic 4</label>
-        <input type="text" id="node-input-topic4" placeholder="Topic for Field 4">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic5"><i class="icon-tasks"></i>Topic 5</label>
-        <input type="text" id="node-input-topic5" placeholder="Topic for Field 5">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic6"><i class="icon-tasks"></i>Topic 6</label>
-        <input type="text" id="node-input-topic6" placeholder="Topic for Field 6">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic7"><i class="icon-tasks"></i>Topic 7</label>
-        <input type="text" id="node-input-topic7" placeholder="Topic for Field 7">
-    </div>
-    <div class="form-row">
-        <label for="node-input-topic8"><i class="icon-tasks"></i>Topic 8</label>
-        <input type="text" id="node-input-topic8" placeholder="Topic for Field 8">
-    </div>
-    <div class="form-row">
-        <label for="node-input-endpoint"><i class="icon-globe"></i>API URL</label>
-        <input type="text" id="node-input-endpoint" placeholder="ThingSpeak API endpoint URL">
-    </div>
-    <div class="form-row">
-        <label for="node-input-apiKey"><i class="icon-lock"></i>API Key</label>
-        <input type="password" id="node-input-apiKey" placeholder="ThingSpeak Write API Key">
-    </div>
+
+    <div id="reuse">
+      <div class="form-row">
+          <label for="node-input-label"><i class="icon-tag"></i>Name</label>
+          <input type="text" id="node-input-label" placeholder="Node Label">
+      </div>
+      <div class="form-row">
+          <label for="node-input-delay"><i class="icon-pause"></i>Delay</label>
+          <input type="text" id="node-input-delay" placeholder="Delay while aggregating values (seconds)">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic1"><i class="icon-tasks"></i>Topic 1</label>
+          <input type="text" id="node-input-topic1" placeholder="Topic for Field 1">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic2"><i class="icon-tasks"></i>Topic 2</label>
+          <input type="text" id="node-input-topic2" placeholder="Topic for Field 2">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic3"><i class="icon-tasks"></i>Topic 3</label>
+          <input type="text" id="node-input-topic3" placeholder="Topic for Field 3">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic4"><i class="icon-tasks"></i>Topic 4</label>
+          <input type="text" id="node-input-topic4" placeholder="Topic for Field 4">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic5"><i class="icon-tasks"></i>Topic 5</label>
+          <input type="text" id="node-input-topic5" placeholder="Topic for Field 5">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic6"><i class="icon-tasks"></i>Topic 6</label>
+          <input type="text" id="node-input-topic6" placeholder="Topic for Field 6">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic7"><i class="icon-tasks"></i>Topic 7</label>
+          <input type="text" id="node-input-topic7" placeholder="Topic for Field 7">
+      </div>
+      <div class="form-row">
+          <label for="node-input-topic8"><i class="icon-tasks"></i>Topic 8</label>
+          <input type="text" id="node-input-topic8" placeholder="Topic for Field 8">
+      </div>
+      <div class="form-row">
+          <label for="node-input-endpoint"><i class="icon-globe"></i>API URL</label>
+          <input type="text" id="node-input-endpoint" placeholder="ThingSpeak API endpoint URL">
+      </div>
+      <div class="form-row">
+          <label for="node-input-apiKey"><i class="icon-lock"></i>API Key</label>
+          <input type="password" id="node-input-apiKey" placeholder="ThingSpeak Write API Key">
+      </div>
+  </div>
 </script>
 
 <script type="text/x-red" data-help-name="thingspeak42">
@@ -90,7 +231,7 @@
     <p>Configuration:</p>
 
     <ul>
-    <li><code>Name</code> - The name to display for this node.  Leave blank to use the default.</li>
+    <li><code>Label</code> - The label to display for this node.  Leave blank to use the default.</li>
 
     <li><code>Delay</code> - The delay before posting data, in seconds.  When the first matching
     message arrives, the timer is started.  As subsequent messages arrive and are matched,
