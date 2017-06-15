@@ -1,4 +1,4 @@
-# node-red-contrib-thingspeak42
+# node-red-contrib-thingspeak
 A multi-field ThingSpeak node for Node-Red
 
 You can find source code and more information here:
